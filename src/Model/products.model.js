@@ -9,7 +9,7 @@ class Product {
       } else {
         throw {
           status: 500,
-          message: 'no user found with provided id',
+          message: 'no products found with provided id',
         };
       }
     } catch (error) {
@@ -25,16 +25,16 @@ class Product {
       throw error;
     }
   }
-  create = async ({ name, description, price, created_by } = {}) => {
+  create = async ({ name, description, price, createdBy } = {}) => {
     try {
       const query = 'INSERT INTO products (name,description,price,created_by) values (?,?,?,?)';
-      const result = await connect(query, [name, description, price, created_by]);
-      return await this.getUserById(result.insertId);
+      const result = await connect(query, [name, description, price, createdBy]);
+      return await this.getProductById(result.insertId);
     } catch (error) {
       throw error;
     }
   };
-  async update({ id, name, description, price, created_by } = {}) {
+  async update({ id, name, description, price, createdBy } = {}) {
     try {
       const query = 'UPDATE products SET name=?,description=?,price=? Where id=? AND created_by=?';
       const product = await this.getProductById(id);
@@ -43,14 +43,14 @@ class Product {
         description ? description : product.description,
         price ? price : product.price,
         id,
-        created_by,
+        createdBy,
       ]);
       if (update.affectedRows) {
         return await this.getProductById(id);
       } else {
         throw {
           status: 500,
-          message: 'unexpected error failed to update product',
+          message: 'unexpected error failed to update product may be you provided unknown createdId',
         };
       }
     } catch (error) {
@@ -68,7 +68,7 @@ class Product {
         } else {
           throw {
             status: 500,
-            message: 'unexpected error failed to delete products',
+            message: 'unexpected error failed to delete products may be you provided unknown createdId ',
           };
         }
       }

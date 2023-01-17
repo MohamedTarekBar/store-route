@@ -45,7 +45,7 @@ const indexProducts = async (req,res,next) => {
     const products = await model.index();
     return res.json({
       status: 200,
-      message: 'retrive users successfully',
+      message: 'retrive products successfully',
       data: products,
     });
   } catch (error) {
@@ -58,7 +58,7 @@ const filterProductByPrice = async (req,res,next) => {
     const products = await model.filterByPrice(res.locals.price);
     return res.json({
       status: 200,
-      message: 'retrive users successfully',
+      message: 'retrive products successfully',
       data: products,
     });
   } catch (error) {

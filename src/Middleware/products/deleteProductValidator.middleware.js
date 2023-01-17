@@ -7,13 +7,12 @@ const deleteProductValidator = (req, res, next) => {
       .min(1)
       .error(new Error('please provide valid created by id'))
       .required(),
-  }).validate(req.body).error;
+  }).validate({ id: req.params.id, createdBy: req.body.createdBy }).error;
 
   if (error === undefined) {
-    const { id, createdBy } = req.body;
     res.locals.ids = {
-      id,
-      createdBy,
+      id: req.params.id,
+      createdBy: req.body.createdBy
     };
     next();
   } else {

@@ -8,6 +8,7 @@ const {
   searchUser,
   searchUsersByName,
   searchUsersByListOfIds,
+  getAllUsersWithProducts,
 } = require('../../Controller/users.controller');
 const createUserValidator = require('../../Middleware/users/createUserValidator.middleware');
 const idsUserValidator = require('../../Middleware/users/idsUserValidator.middleware');
@@ -27,6 +28,7 @@ usersRoute.route('/search/list').get(idsUserValidator, searchUsersByListOfIds);
 
 usersRoute.route('/search/:name').get(nameUserValidator, searchUsersByName);
 
+usersRoute.route('/pivot').get(getAllUsersWithProducts)
 // index
 // create
 // update

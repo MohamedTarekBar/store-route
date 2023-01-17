@@ -12,7 +12,7 @@ const createProductsTable = `
     CREATE TABLE IF NOT EXISTS products (
         id int AUTO_INCREMENT NOT NULL PRIMARY KEY,
         name varchar(50) NOT NULL,
-        description varchar(255) NOT NULL,
+        description varchar(255),
         price numeric(10,2) NOT NULL,
         created_by int NOT NULL,
         CONSTRAINT \`fk_created_by\`

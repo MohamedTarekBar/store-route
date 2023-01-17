@@ -92,6 +92,19 @@ const searchUsersByListOfIds = async (req, res, next) => {
   }
 };
 
+const getAllUsersWithProducts = async (req,res,next) => {
+  try {
+    const up = await model.getAllUsersWithProducts();
+    return res.json({
+      status: 200,
+      message: 'users with products retrieved successfully',
+      data: up,
+    });
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   indexUsers,
   createUser,
@@ -100,4 +113,5 @@ module.exports = {
   searchUser,
   searchUsersByName,
   searchUsersByListOfIds,
+  getAllUsersWithProducts
 };

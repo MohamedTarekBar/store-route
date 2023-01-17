@@ -135,6 +135,29 @@ class User {
       throw error;
     }
   };
+
+  getAllUsersWithProducts = async () => {
+    try {
+      const query = `SELECT u.email, CONCAT('[',GROUP_CONCAT(JSON_OBJECT("name",p.name,"price",p.price)),']') As products FROM products As p LEFT JOIN users AS u ON u.id = p.created_by GROUP BY u.email`;
+      const up = await connect(query);
+      if (up.length) {
+        const userProduct = up
+        return userProduct.map(u => {
+          return {
+            email: u.email,
+            products: JSON.parse(u.products)
+          }
+        })
+      } else {
+        throw {
+          status: 500,
+          message: 'no data found',
+        };
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 module.exports = User;

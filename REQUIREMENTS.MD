@@ -18,4 +18,4 @@ product table (id, pName , pDescription, price, createdby(usr id ))
 2- delete product (product owner only ) 💚
 3- update product (product owner only) 💚 
 4- get all products 💚
-5- search for products where price greater than 3000
+5- search for products where price greater than 3000 💚
