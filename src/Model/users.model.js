@@ -1,88 +1,115 @@
 const connect = require('../Database/connect');
 
 class User {
-    async getUserById(id) {
-        try {
-            const getQuery = 'SELECT * FROM users WHERE id=?';
-            const result = await connect(getQuery,[id]);
-            return result[0]
-        } catch (error) {
-            throw error
-        }
+  async getUserById(id) {
+    try {
+      const getQuery = 'SELECT * FROM users WHERE id=?';
+      const result = await connect(getQuery, [id]);
+      if (result.length) {
+        return result[0];
+      } else {
+        throw {
+          status: 500,
+          message: 'no user found with provided id',
+        };
+      }
+    } catch (error) {
+      throw error;
     }
-    async index () {
-        try {
-            const query = 'SELECT * FROM users';
-            const result = await connect(query);
-            return result
-        } catch (error) {
-            throw error
-        }
+  }
+  async index() {
+    try {
+      const query = 'SELECT * FROM users';
+      const result = await connect(query);
+      return result;
+    } catch (error) {
+      throw error;
     }
-    
-    async create ({name,age,email,password}={}) {
-        try {
-            const query = 'INSERT INTO users (name,age,email,password) values (?,?,LOWER(?),?);';
-            const result = await connect(query,[name,age,email,password]);
-            return await this.getUserById(result.insertId)
-        } catch (error) {
-            if (error.errno = 1062) {
-                throw {
-                    status: 502,
-                    message: 'email already exist'
-                }
-            }
-            throw error
-        }
-    }
+  }
 
-    async update ({id,name,age,email,password}={}) {
-        try {
-        
-            const getQuery = 'SELECT * FROM users WHERE id=?';
-            const user = await connect(getQuery,[id]);
-            const oldUserData = user
-            if (oldUserData.length) {
-                if (oldUserData[0].email.trim().toLowerCase() != email.trim().toLowerCase()) {
-                    const updateQuery = 'UPDATE users SET name=?, age=?, email=?, password=? WHERE id=?'
-                    const result = await connect(updateQuery,[
-                        name ? name : oldUserData.name,
-                        age? age : oldUserData.age,
-                        email? email : oldUserData.email,
-                        password? password : oldUserData.password,
-                        id
-                    ])
-                    if (result.affectedRows > 0) {
-                       return await this.getUserById(id)
-                    } else {
-                        throw {
-                            status: 500,
-                            message: 'failed to update user'
-                        }
-                    }
-                } else {
-                    throw {
-                        status: 500,
-                        message: 'email provided equal the last email please avoid sending fake requests'
-                    }
-                }
-            } else {
-                throw {
-                    status: 500,
-                    message: 'user with id provided not found'
-                }
-            }
-        } catch (error) {
-            if (error.errno == 1062) {
-                throw {
-                    status: 502,
-                    message: 'email already in use with diffrent user'
-                }
-            }
-            throw error
-        }
+  async create({ name, age, email, password } = {}) {
+    try {
+      const query = 'INSERT INTO users (name,age,email,password) values (?,?,LOWER(?),?);';
+      const result = await connect(query, [name, age, email, password]);
+      return await this.getUserById(result.insertId);
+    } catch (error) {
+      if ((error.errno = 1062)) {
+        throw {
+          status: 502,
+          message: 'email already exist',
+        };
+      }
+      throw error;
     }
+  }
+
+  async update({ id, name, age, email, password } = {}) {
+    try {
+      const query = 'UPDATE users SET name=?,age=?,email=LOWER(?),password=? Where id=?';
+      const user = await this.getUserById(id);
+      console.log(user);
+      const update = await connect(query, [
+        name ? name : user.name,
+        age ? age : user.age,
+        email ? email : user.email,
+        password ? password : user.password,
+        id,
+      ]);
+      if (update.affectedRows) {
+        return await this.getUserById(id);
+      } else {
+        throw {
+          status: 500,
+          message: 'unexpected error failed to update user',
+        };
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+  async delete({ id } = {}) {
+    try {
+      const user = await this.getUserById(id);
+      if (user) {
+        const query = 'DELETE FROM users WHERE id=?';
+        const result = await connect(query, [id]);
+        if (result.affectedRows) {
+          return user;
+        } else {
+          throw {
+            status: 500,
+            message: 'unexpected error failed to delete user',
+          };
+        }
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
+  searchByName = async ({ name } = {}) => {
+    const query = 'SELECT id, name, age, email  FROM users WHERE name LIKE "?%" ';
+    const users = await connect(query, [name]);
+    if (users.length) {
+      return users;
+    } else {
+      throw {
+        status: 500,
+        message: 'no users found',
+      };
+    }
+  };
+  searchByNameSortedWithAge = async ({ name, age } = {}) => {
+    const query = 'SELECT * FROM users WHERE name=? AND age>?';
+    const users = await connect(query, [name, age]);
+    if (users.length) {
+      return users;
+    } else {
+      throw {
+        status: 500,
+        message: 'no users found',
+      };
+    }
+  };
 }
 
-
-module.exports = User
+module.exports = User;

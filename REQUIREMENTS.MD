@@ -6,8 +6,8 @@ product table (id, pName , pDescription, price, createdby(usr id ))
 
 -user APIs-
 1- add user 💚
-2- update user 
-3- delete user
+2- update user 💚
+3- delete user 💚
 5- search for user where his name start with "a" and age less than 30 => using like for characters
 6- search for users by list of ids => using IN
 7- get all user 💚

@@ -4,7 +4,8 @@
   "description": "",
   "main": "src/server.js",
   "scripts": {
-    "start": "nodemon"
+    "start": "nodemon",
+    "prettier": " prettier --write ."
   },
   "keywords": [],
   "author": "",
@@ -15,6 +16,7 @@
     "express": "^4.18.2",
     "joi": "^17.7.0",
     "mysql2": "^3.0.1",
-    "nodemon": "^2.0.20"
+    "nodemon": "^2.0.20",
+    "prettier": "^2.8.3"
   }
 }

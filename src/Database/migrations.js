@@ -13,12 +13,23 @@ const createProductsTable = `
         id int AUTO_INCREMENT NOT NULL PRIMARY KEY,
         name varchar(50) NOT NULL,
         description varchar(255) NOT NULL,
-        created_by int NOT NULL,
-        FOREIGN KEY (created_by) REFERENCES users(id)
+        price numeric(10,2) NOT NULL
+    );
+`;
+const createUserProductsTable = `
+    CREATE TABLE IF NOT EXISTS user_products (
+        id int AUTO_INCREMENT NOT NULL PRIMARY KEY,
+        product_id int NOT NULL,
+        user_id int NOT NULL,
+        CONSTRAINT \`fk_product_id\`
+        FOREIGN KEY (product_id) REFERENCES products (id),
+        CONSTRAINT \`fk_user_id\`
+        FOREIGN KEY (user_id) REFERENCES users (id)
     );
 `;
 
 module.exports = {
-    createProductsTable,
-    createUsersTable
-}
+  createProductsTable,
+  createUsersTable,
+  createUserProductsTable,
+};
