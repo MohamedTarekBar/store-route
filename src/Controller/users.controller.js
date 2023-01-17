@@ -53,16 +53,41 @@ const deleteUser = async (req, res, next) => {
     next(error);
   }
 };
-const getProductsOwners = async (req, res, next) => {
+
+const searchUser = async (req, res, next) => {
   try {
-    const user = await model.getProductsOwners(res.locals.user);
+    const users = await model.searchByNameAndAge(res.locals.criteria);
     return res.json({
       status: 200,
-      message: 'retreive products added by owners successfully',
-      data: user,
+      message: 'users retrieved successfully',
+      data: users,
     });
   } catch (error) {
-    console.log(error);
+    next(error);
+  }
+};
+const searchUsersByName = async (req, res, next) => {
+  try {
+    const users = await model.searchByName(res.locals.criteria);
+    return res.json({
+      status: 200,
+      message: 'user retrieved successfully',
+      data: users,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const searchUsersByListOfIds = async (req, res, next) => {
+  try {
+    const users = await model.getUsersByIds(res.locals.ids);
+    return res.json({
+      status: 200,
+      message: 'user retrieved successfully',
+      data: users,
+    });
+  } catch (error) {
     next(error);
   }
 };
@@ -72,5 +97,7 @@ module.exports = {
   createUser,
   updateUser,
   deleteUser,
-  getProductsOwners,
+  searchUser,
+  searchUsersByName,
+  searchUsersByListOfIds,
 };

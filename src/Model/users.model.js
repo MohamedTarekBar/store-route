@@ -88,8 +88,8 @@ class User {
   }
   searchByName = async ({ name } = {}) => {
     try {
-      const query = 'SELECT id, name, age, email  FROM users WHERE name LIKE "?%" ';
-      const users = await connect(query, [name]);
+      const query = 'SELECT id, name, age, email  FROM users WHERE name LIKE ?';
+      const users = await connect(query, [name + '%']);
       if (users.length) {
         return users;
       } else {
@@ -99,10 +99,11 @@ class User {
         };
       }
     } catch (error) {
-      throw error
+      throw error;
     }
   };
-  searchByNameSortedWithAge = async ({ name, age } = {}) => {
+
+  searchByNameAndAge = async ({ name, age } = {}) => {
     try {
       const query = 'SELECT * FROM users WHERE name=? AND age>?';
       const users = await connect(query, [name, age]);
@@ -115,15 +116,15 @@ class User {
         };
       }
     } catch (error) {
-      throw error
+      throw error;
     }
   };
-  getUsersByIds = async ({ids} = {}) =>{
+  getUsersByIds = async ({ ids } = {}) => {
     try {
-      const query = 'SELECT * FROM users WHERE id IN (?)'
-      const users = await connect(query,[ids])
+      const query = 'SELECT * FROM users WHERE id IN (?)';
+      const users = await connect(query, [ids]);
       if (users.length) {
-        return users
+        return users;
       } else {
         throw {
           status: 500,
@@ -131,9 +132,9 @@ class User {
         };
       }
     } catch (error) {
-      throw error
+      throw error;
     }
-  }
+  };
 }
 
 module.exports = User;
