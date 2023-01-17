@@ -87,29 +87,53 @@ class User {
     }
   }
   searchByName = async ({ name } = {}) => {
-    const query = 'SELECT id, name, age, email  FROM users WHERE name LIKE "?%" ';
-    const users = await connect(query, [name]);
-    if (users.length) {
-      return users;
-    } else {
-      throw {
-        status: 500,
-        message: 'no users found',
-      };
+    try {
+      const query = 'SELECT id, name, age, email  FROM users WHERE name LIKE "?%" ';
+      const users = await connect(query, [name]);
+      if (users.length) {
+        return users;
+      } else {
+        throw {
+          status: 500,
+          message: 'no users found',
+        };
+      }
+    } catch (error) {
+      throw error
     }
   };
   searchByNameSortedWithAge = async ({ name, age } = {}) => {
-    const query = 'SELECT * FROM users WHERE name=? AND age>?';
-    const users = await connect(query, [name, age]);
-    if (users.length) {
-      return users;
-    } else {
-      throw {
-        status: 500,
-        message: 'no users found',
-      };
+    try {
+      const query = 'SELECT * FROM users WHERE name=? AND age>?';
+      const users = await connect(query, [name, age]);
+      if (users.length) {
+        return users;
+      } else {
+        throw {
+          status: 500,
+          message: 'no users found',
+        };
+      }
+    } catch (error) {
+      throw error
     }
   };
+  getUsersByIds = async ({ids} = {}) =>{
+    try {
+      const query = 'SELECT * FROM users WHERE id IN (?)'
+      const users = await connect(query,[ids])
+      if (users.length) {
+        return users
+      } else {
+        throw {
+          status: 500,
+          message: 'no users found',
+        };
+      }
+    } catch (error) {
+      throw error
+    }
+  }
 }
 
 module.exports = User;
